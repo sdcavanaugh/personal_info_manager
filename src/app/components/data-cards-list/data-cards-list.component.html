@@ -1,1 +1,14 @@
-<p>data-cards-list works!</p>
+<h2>Data Cards</h2>
+<ul>
+    <li *ngFor="let card of dataCards">
+        <span>{{card.id}}</span>
+        {{card.type}}<br>
+        {{card.category}}<br>
+        {{card.name}}<br>
+        <ul>
+            <li *ngFor="let prop of card.allProps | keyvalue">
+                {{prop.key}} ==> {{prop.value}}
+            </li>
+        </ul>
+    </li>
+</ul>

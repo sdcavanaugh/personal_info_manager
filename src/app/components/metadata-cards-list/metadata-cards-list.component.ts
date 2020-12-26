@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { METADATACARDS } from '../../mock-metadata';
 
 @Component({
   selector: 'app-metadata-cards-list',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./metadata-cards-list.component.css']
 })
 export class MetadataCardsListComponent implements OnInit {
+
+  metadataCards = METADATACARDS;
 
   constructor() { }
 

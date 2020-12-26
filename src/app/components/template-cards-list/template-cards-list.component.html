@@ -1,1 +1,13 @@
-<p>template-cards-list works!</p>
+<h2>Template Cards</h2>
+<ul>
+    <li *ngFor="let card of templateCards">
+        <span>{{card.id}}</span>
+        {{card.type}}<br>
+        {{card.name}}<br>
+        <ul>
+            <li *ngFor="let property of card.allProps">
+                {{property}}
+            </li>
+        </ul>
+    </li>
+</ul>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TEMPLATECARDS } from '../../mock-templates';
 
 @Component({
   selector: 'app-template-cards-list',
@@ -7,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TemplateCardsListComponent implements OnInit {
 
+  templateCards = TEMPLATECARDS;
+  
   constructor() { }
 
   ngOnInit(): void {
