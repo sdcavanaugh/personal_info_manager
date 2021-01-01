@@ -1,6 +1,22 @@
 <h2>Data Cards</h2>
-<ul>
+
+<div>
+  <label>Card Name:
+      <input #cardName />
+  </label>
+  <!-- click passes input value to add(*) then clears the input -->
+  <button (click)="add(cardName.value); cardName.value=''">
+      add
+  </button>
+</div>
+
+<ul class="dataCards">
     <li *ngFor="let card of dataCards">
+        <a routerLink="/data/{{card.id}}">
+            <span class="badge">{{card.id}}</span> {{card.name}}
+        </a>
+        <button class="delete" title="delete card" (click)="delete(card)">x</button>
+    <!--
         <span>{{card.id}}</span>
         {{card.type}}<br>
         {{card.category}}<br>
@@ -10,5 +26,6 @@
                 {{prop.key}} ==> {{prop.value}}
             </li>
         </ul>
+    -->
     </li>
 </ul>

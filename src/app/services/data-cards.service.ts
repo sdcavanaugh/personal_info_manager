@@ -28,14 +28,14 @@ export class DataCardsService {
   getDataCards(): Observable<DataCard[]> {
     return this.http.get<DataCard[]>(this.dataCardsUrl)
     .pipe(
-      tap(_ => this.log('fetched heroes')),
+      tap(_ => this.log('fetched data cards')),
       catchError(this.handleError<DataCard[]>('getDataCards', []))
     );
 
   }
 
   /** GET dataCard by id. Return `undefined` when id not found */
-  getDataCardNo404<Data>(id: number): Observable<DataCard> {
+  getDataCardNo404<Data>(id: string): Observable<DataCard> {
     const url = `${this.dataCardsUrl}/?id=${id}`;
     return this.http.get<DataCard[]>(url)
       .pipe(
@@ -49,7 +49,7 @@ export class DataCardsService {
   }
 
   /** GET dataCard by id. Will 404 if id not found */
-  getDataCard(id: number): Observable<DataCard> {
+  getDataCard(id: string): Observable<DataCard> {
     const url = `${this.dataCardsUrl}/${id}`;
     return this.http.get<DataCard>(url).pipe(
       tap(_ => this.log(`fetched dataCard id=${id}`)),

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { DATACARDS } from '../../mock-data';
+
+import { DataCard } from '../../models/data-card';
+import { DataCardsService } from '../../services/data-cards.service';
 
 @Component({
   selector: 'app-data-cards-list',
@@ -8,21 +10,33 @@ import { DATACARDS } from '../../mock-data';
 })
 export class DataCardsListComponent implements OnInit {
 
-  dataCards = DATACARDS;
+  dataCards = <DataCard[]>[];
 
-  constructor() { }
+  constructor( private dataService: DataCardsService) { }
 
   ngOnInit(): void {
+    this.getCards();
   }
 
-  // dummy(): void {
-  //   this.dataCards.forEach(currentDataCard => {
-  //     // TODO: List name, id, etc here.
-  //     // Here, iterate through currentDataCard.allProps
-  //     currentDataCard.allProps.forEach((value, key) => {
-  //       //
-  //     });
-      
-  //   });
-  // }
+  getCards(): void {
+    this.dataService.getDataCards()
+    .subscribe(cards => this.dataCards = cards);
+  }
+
+  add(card: DataCard): void {
+    card.name = card.name.trim();
+    if (!card.name) {
+      return;
+    }
+    this.dataService.addDataCard(card)
+      .subscribe( newCard => {
+        this.dataCards.push(newCard);
+      });
+  }
+
+  delete(card: DataCard): void {
+    this.dataCards = this.dataCards.filter( c => c !== card);
+    this.dataService.deleteDataCard(card).subscribe();
+  }
+
 }

@@ -101,8 +101,9 @@ export class InMemoryDataService implements InMemoryDbService {
         )
       }
     ];
-
-    return { dataCards, metadataCards, templateCards };
+    // const dataStores = { dataCards, metadataCards, templateCards };
+    // return dataStores;
+    return {dataCards};
   }
 
   // Overrides the genId method to ensure that a record always has an id.
