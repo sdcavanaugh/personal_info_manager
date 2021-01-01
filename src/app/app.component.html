@@ -1,6 +1,5 @@
-<div>
-  <h1>Welcome to {{title}}</h1>
-
+<h1>Welcome to {{title}}</h1>
+<!--
   <nav class="navbar navbar-expand navbar-dark bg-dark">
     <div class="navbar-nav mr-auto">
       <li class="nav-item">
@@ -18,5 +17,12 @@
   <div class="container mt-3">
     <router-outlet></router-outlet>
   </div>
- 
-</div>
+ -->
+<nav>
+  <a routerLink="/dashboard">Dashboard</a>
+  <a routerLink="/data">DataCards</a>
+  <a routerLink="/metadata">Metadata Cards</a>
+  <a routerLink="/templates">Template Cards</a>
+</nav>
+<router-outlet></router-outlet>
+<app-messages></app-messages>

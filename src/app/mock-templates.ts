@@ -40,4 +40,4 @@ export const TEMPLATECARDS: TemplateCard[] = [
             "security image"
         )
       }
-    ]
+    ];

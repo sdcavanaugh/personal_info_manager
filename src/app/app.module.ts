@@ -3,6 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService } from './services/in-memory-data.service';
+
 import { AppComponent } from './app.component';
 import { AddDataCardComponent } from './components/add-data-card/add-data-card.component';
 import { DataCardDetailsComponent } from './components/data-card-details/data-card-details.component';
@@ -20,6 +23,10 @@ import { EditTemplateCardComponent } from './components/edit-template-card/edit-
 import { AddTemplateCardComponent } from './components/add-template-card/add-template-card.component';
 import { TemplateCardDetailsComponent } from './components/template-card-details/template-card-details.component';
 import { TemplateCardsListComponent } from './components/template-cards-list/template-cards-list.component';
+import { MessagesComponent } from './components/messages/messages.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DataCardSearchComponent } from './components/data-card-search/data-card-search.component';
+
 
 @NgModule({
   declarations: [
@@ -35,7 +42,10 @@ import { TemplateCardsListComponent } from './components/template-cards-list/tem
     EditTemplateCardComponent,
     AddTemplateCardComponent,
     TemplateCardDetailsComponent,
-    TemplateCardsListComponent
+    TemplateCardsListComponent,
+    MessagesComponent,
+    DashboardComponent,
+    DataCardSearchComponent
   ],
   imports: [
     BrowserModule,

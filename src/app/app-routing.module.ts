@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+
 import { AddDataCardComponent } from './components/add-data-card/add-data-card.component';
 import { DataCardDetailsComponent } from './components/data-card-details/data-card-details.component';
 import { DataCardsListComponent } from './components/data-cards-list/data-cards-list.component';
@@ -20,7 +22,8 @@ import { EditTemplateCardComponent } from './components/edit-template-card/edit-
 // order makes a difference!
 // TODO - explore pathMatch usage
 const routes: Routes = [
-  { path: '', redirectTo: 'data', pathMatch: 'full' },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
   { path: 'data', component: DataCardsListComponent },
   { path: 'data/add', component: AddDataCardComponent },
   { path: 'data/edit/:id', component: EditDataCardComponent },
