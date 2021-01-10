@@ -1,3 +1,9 @@
+-----
+
+{:toc}
+
+-----
+
 # Financial
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.4.
@@ -20,17 +26,18 @@ Each data card contains contact information (properties) for a single entity tha
 ## Navigation
 
 - Welcome Screen
-  - Data Tab (`/data ==> data-cards-list component`]`)
+  - Dashboard
+  - Data Cards (`/data ==> data-cards-list component`]`)
     - Select/Show Data Card (`/data/:id ==> data-card-details component`)
       - Edit Data Card (`/data/edit/:id ==> edit-data-card component`)
       - Delete Data Card (`/data/delete/:id ==> data-cards.service.delete(:id)`
     - Add Data Card (`/data/add ==> add-data-card component`)
-  - Metadata Tab (`/metadata ==> metadata-cards-list component`)
+  - Metadata Cards (`/metadata ==> metadata-cards-list component`)
     - Select/Show Metadata Card (`/metadata/:id ==> metadata-card-details component`)
       - Edit Metadata Card (`/metadata/edit/:id ==> edit-metadata-card component`)
       - Delete Metadata Card (`/metadata/delete/:id ==> metadata-cards.service.delete(:id)`)
     - Add Metadata Card (`/metadata/add ==> add-metadata-card component`)
-  - Templates Tab (`/template ==> template-cards-list component`)
+  - Templates Cards (`/template ==> template-cards-list component`)
     - Select/Show Template Card (`/template/:id ==> template-card-details component`)
       - Edit Template Card (`/template/edit/:id ==> edit-template-card component`)
       - Delete Template Card (`/template/delete/:id ==> template-cards.service.delete(:id)`)
@@ -222,6 +229,9 @@ A "short form" document only contains:
   - payload is a JSON document; document must contain a name, _id and _rev properties; system updates data document and responds with status code 200
 
 # Development
+
+## ToDo
+
 
 ## Development server
 

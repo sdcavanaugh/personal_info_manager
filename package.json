@@ -21,9 +21,11 @@
     "@angular/platform-browser-dynamic": "~11.0.4",
     "@angular/router": "~11.0.4",
     "@ng-bootstrap/ng-bootstrap": "^8.0.0",
+    "@types/pouchdb": "^6.4.0",
     "angular-in-memory-web-api": "^0.11.0",
     "angular2-uuid": "^1.1.1",
     "bootstrap": "^4.5.3",
+    "pouchdb": "^7.2.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

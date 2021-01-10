@@ -11,12 +11,13 @@
 </div>
 
 <ul class="dataCards">
-    <li *ngFor="let card of dataCards">
+    <li *ngFor="let card of cards">
         <a routerLink="/data/{{card.id}}">
             <span class="badge">{{card.id}}</span> {{card.name}}
         </a>
         <button class="delete" title="delete card" (click)="delete(card)">x</button>
     <!--
+        <br>
         <span>{{card.id}}</span>
         {{card.type}}<br>
         {{card.category}}<br>

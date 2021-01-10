@@ -10,17 +10,17 @@ import { DataCardsService } from '../../services/data-cards.service';
 })
 export class DataCardsListComponent implements OnInit {
 
-  dataCards = <DataCard[]>[];
+  cards = <DataCard[]>[];
 
-  constructor( private dataService: DataCardsService) { }
+  constructor( private cardService: DataCardsService) { }
 
   ngOnInit(): void {
     this.getCards();
   }
 
   getCards(): void {
-    this.dataService.getDataCards()
-    .subscribe(cards => this.dataCards = cards);
+    this.cardService.getCards()
+    .subscribe(cards => this.cards = cards);
   }
 
   add(card: DataCard): void {
@@ -28,15 +28,15 @@ export class DataCardsListComponent implements OnInit {
     if (!card.name) {
       return;
     }
-    this.dataService.addDataCard(card)
+    this.cardService.addCard(card)
       .subscribe( newCard => {
-        this.dataCards.push(newCard);
+        this.cards.push(newCard);
       });
   }
 
   delete(card: DataCard): void {
-    this.dataCards = this.dataCards.filter( c => c !== card);
-    this.dataService.deleteDataCard(card).subscribe();
+    this.cards = this.cards.filter( c => c !== card);
+    this.cardService.deleteCard(card).subscribe();
   }
 
 }

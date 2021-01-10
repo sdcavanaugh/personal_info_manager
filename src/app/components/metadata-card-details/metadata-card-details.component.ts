@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+
+import { MetadataCard } from '../../models/metadata-card';
+import { MetadataCardsService } from '../../services/metadata-cards.service';
 
 @Component({
   selector: 'app-metadata-card-details',
@@ -6,10 +11,30 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./metadata-card-details.component.css']
 })
 export class MetadataCardDetailsComponent implements OnInit {
+  card: MetadataCard;
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private cardService: MetadataCardsService,
+    private location: Location
+  ) { }
 
   ngOnInit(): void {
+    this.getCard();
   }
 
+  getCard(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.cardService.getCard(id)
+      .subscribe(card => this.card = card);
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+
+  save(): void {
+    this.cardService.updateCard(this.card)
+      .subscribe(() => this.goBack());
+  }
 }

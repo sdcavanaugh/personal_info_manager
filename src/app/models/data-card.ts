@@ -1,8 +1,5 @@
-export interface DataCard {
-    id: string;
-    rev: string;
-    type: string;
-    category: string;
-    name: string;
-    allProps: Map<string,string>
+import { GenericCard } from './generic-card';
+
+export interface DataCard extends GenericCard {
+
 }

@@ -1,1 +1,22 @@
-<p>template-card-details works!</p>
+<div *ngIf="card">
+    <h2>{{card.name}} Details</h2>
+    <div><span>id: </span>{{card.id}}</div>
+    <div>
+      <label>name:
+        <input [(ngModel)]="card.name" placeholder="name"/>
+      </label><br>
+      <label>type:
+        <input [(ngModel)]="card.type" placeholder="type"/>
+      </label><br>
+      <label>category:
+          <input [(ngModel)]="card.category" placeholder="category"/>
+      </label><br>
+      <ul>
+          <li *ngFor="let prop in card">
+              {{prop}} ==> {{card[prop]}}
+          </li>
+      </ul>
+  </div>
+    <button (click)="goBack()">go back</button>
+    <button (click)="save()">save</button>
+  </div>

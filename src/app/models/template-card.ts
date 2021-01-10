@@ -1,7 +1,5 @@
-export interface TemplateCard {
-    id: string;
-    rev: string;
-    type: string;
-    name: string;
-    allProps: Array<string>
+import { GenericCard } from './generic-card';
+
+export interface TemplateCard extends GenericCard {
+    properties: Array<string>
 }

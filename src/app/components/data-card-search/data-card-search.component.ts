@@ -33,7 +33,7 @@ export class DataCardSearchComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.service.searchDataCards(term)),
+      switchMap((term: string) => this.service.searchCards(term)),
     );
   }
 }

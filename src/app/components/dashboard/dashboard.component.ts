@@ -5,8 +5,8 @@ import { MetadataCard } from '../../models/metadata-card';
 import { TemplateCard } from '../../models/template-card';
 
 import { DataCardsService } from '../../services/data-cards.service';
-import { MetadataCardsService } from '../../services/metadata-cards.service';
-import { TemplateCardsService } from '../../services/template-cards.service';
+// import { MetadataCardsService } from '../../services/metadata-cards.service';
+// import { TemplateCardsService } from '../../services/template-cards.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,8 +20,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private dataCardService: DataCardsService,
-//    private metadataCardsService: MetadataCardsService,
-//    private templateCardsService: TemplateCardsService
+    // private metadataCardService: MetadataCardsService,
+    // private templateCardService: TemplateCardsService
   ) { }
 
   ngOnInit(): void {
@@ -31,16 +31,18 @@ export class DashboardComponent implements OnInit {
   }
 
   getDataCards(): void {
-    this.dataCardService.getDataCards()
+    this.dataCardService.getCards()
       .subscribe(cards => this.dataCards = cards.slice(1,5));
   }
 
   // getMetadataCards(): void {
-
+  //   this.metadataCardService.getCards()
+  //     .subscribe(cards => this.metadataCards = cards.slice(1,5));
   // }
 
-  // getTemplateCartds(): void {
-
+  // getTemplateCards(): void {
+  //   this.templateCardService.getCards()
+  //     .subscribe(cards => this.templateCards = cards.slice(1,5));
   // }
 
 }

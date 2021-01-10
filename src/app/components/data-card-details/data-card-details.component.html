@@ -12,8 +12,8 @@
           <input [(ngModel)]="card.category" placeholder="category"/>
       </label><br>
       <ul>
-          <li *ngFor="let prop of card.allProps | keyvalue">
-              {{prop.key}} ==> {{prop.value}}
+          <li *ngFor="let prop in card">
+              {{prop}} ==> {{card[prop]}}
           </li>
       </ul>
   </div>

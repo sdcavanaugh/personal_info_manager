@@ -15,7 +15,7 @@ export class DataCardDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private dataService: DataCardsService,
+    private cardService: DataCardsService,
     private location: Location
   ) { }
 
@@ -25,7 +25,7 @@ export class DataCardDetailsComponent implements OnInit {
 
   getCard(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.dataService.getDataCard(id)
+    this.cardService.getCard(id)
       .subscribe(card => this.card = card);
   }
 
@@ -34,7 +34,7 @@ export class DataCardDetailsComponent implements OnInit {
   }
 
   save(): void {
-    this.dataService.updateDataCard(this.card)
+    this.cardService.updateCard(this.card)
       .subscribe(() => this.goBack());
   }
 }

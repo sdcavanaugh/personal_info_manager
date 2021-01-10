@@ -1,6 +1,5 @@
-export interface MetadataCard {
-    id: string;
-    rev: string;
-    type: string;
+import { GenericCard } from './generic-card';
+
+export interface MetadataCard extends GenericCard {
     values: Array<string>
 }
