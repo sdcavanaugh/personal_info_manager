@@ -37,4 +37,26 @@ export class DataCardDetailsComponent implements OnInit {
     this.cardService.updateCard(this.card)
       .subscribe(() => this.goBack());
   }
+
+  getPropNames(): string[] {
+    let propNames = [];
+
+    for( let p in this.card) {
+      propNames.push(p);
+    }
+
+    return propNames;
+  }
+
+  getNestedProps(prop): Object[] {
+    if (this.isArray(prop)) {
+      return this.card[prop];
+    } else {
+      return null;
+    }
+  }
+
+  isArray(prop: string): boolean {
+    return this.card[prop] && Array.isArray(this.card[prop])
+  }
 }

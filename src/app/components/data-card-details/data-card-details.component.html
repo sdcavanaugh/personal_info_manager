@@ -1,21 +1,25 @@
 <div *ngIf="card">
     <h2>{{card.name}} Details</h2>
     <div><span>id: </span>{{card.id}}</div>
-    <div>
-      <label>name:
-        <input [(ngModel)]="card.name" placeholder="name"/>
-      </label><br>
-      <label>type:
-        <input [(ngModel)]="card.type" placeholder="type"/>
-      </label><br>
-      <label>category:
-          <input [(ngModel)]="card.category" placeholder="category"/>
-      </label><br>
-      <ul>
-          <li *ngFor="let prop in card">
-              {{prop}} ==> {{card[prop]}}
-          </li>
-      </ul>
+    <div *ngFor="let prop of getPropNames()">
+      <div *ngIf="this.isArray(prop); then thenBlock else elseBlock"></div>
+      <ng-template #thenBlock>
+        {{prop}} ==> {{card[prop]}}
+<!--
+        <dif *ngFor="let p of getNestedProps(prop)">
+          <label>{{p}}: 
+            <input [(ngModel)]="card[prop][p]" placeholder="{{p}}"/>
+          </label>
+        </dif>
+-->
+      </ng-template>
+      <ng-template #elseBlock>
+        <label>{{prop}}: 
+          <input [(ngModel)]="card[prop]" placeholder="{{prop}}"/>
+        </label>
+      </ng-template>
+    </div>
+  <div>
   </div>
     <button (click)="goBack()">go back</button>
     <button (click)="save()">save</button>
