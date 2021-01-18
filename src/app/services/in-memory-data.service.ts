@@ -28,6 +28,10 @@ export class InMemoryDataService implements InMemoryDbService {
             {
               "question": "favorite teacher",
               "answer": "Mr. Rogers"
+            },
+            {
+              "question": "favorite color",
+              "answer": "green"
             }
           ]
       },

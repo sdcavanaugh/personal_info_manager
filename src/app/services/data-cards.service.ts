@@ -5,6 +5,8 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { DataCard } from '../models/data-card';
+import { SecurityQuestion } from '../models/security-question';
+
 import { MessageService } from '../services/message.service';
 
 @Injectable({
@@ -56,8 +58,25 @@ export class DataCardsService {
         this.log(`type: ${_.type}`);
         this.log(`type: ${_.category}`);
         this.log(`name: ${_.name}`);
+        this.log(`properties:`);
+        // =====
+        // TODO - look at moving this logic into data-card-details.component.getNestedProps()
+        // =====
         for( let p in _) {
-          this.log(`${p}: ${_[p]}`);
+          if ( _[p] instanceof Array ) {
+            this.log(`${p}`);
+            for( let a in _[p] ) {
+              if ( _[p][a] instanceof Object ) {
+                for ( let n in _[p][a] ) {
+                  this.log(`${n}: ${_[p][a][n]}`)
+                }
+              } else {
+                this.log(`${a}: ${_[p][a]}`)
+              }
+            }
+          } else {
+            this.log(`${p}: ${_[p]}`);
+          }
         }
       }),
       catchError(this.handleError<DataCard>(`getCard id=${id}`))
