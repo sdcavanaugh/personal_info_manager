@@ -14,7 +14,7 @@ import { DataCardsService } from '../../services/data-cards.service';
   styleUrls: ['./data-card-search.component.css']
 })
 export class DataCardSearchComponent implements OnInit {
-  cards$: Observable<DataCard[]>;
+  cards$: DataCard[];
   private searchTerms = new Subject<string>();
 
   constructor(private service: DataCardsService) { }

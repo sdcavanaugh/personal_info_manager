@@ -19,8 +19,7 @@ export class TemplateCardsListComponent implements OnInit {
   }
 
   getCards(): void {
-    this.cardService.getCards()
-    .subscribe(cards => this.cards = cards);
+    this.cardService.getCards();
   }
 
   add(card: TemplateCard): void {
@@ -28,15 +27,12 @@ export class TemplateCardsListComponent implements OnInit {
     if (!card.name) {
       return;
     }
-    this.cardService.addCard(card)
-      .subscribe( newCard => {
-        this.cards.push(newCard);
-      });
+    this.cards.push(this.cardService.addCard(card));
   }
 
   delete(card: TemplateCard): void {
     this.cards = this.cards.filter( c => c !== card);
-    this.cardService.deleteCard(card).subscribe();
+    this.cardService.deleteCard(card);
   }
 
 }

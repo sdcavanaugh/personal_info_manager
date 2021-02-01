@@ -31,8 +31,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getDataCards(): void {
-    this.dataCardService.getCards()
-      .subscribe(cards => this.dataCards = cards.slice(1,5));
+    this.dataCardService.getCards();
   }
 
   // getMetadataCards(): void {

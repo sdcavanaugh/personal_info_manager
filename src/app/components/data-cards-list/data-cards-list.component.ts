@@ -10,7 +10,7 @@ import { DataCardsService } from '../../services/data-cards.service';
 })
 export class DataCardsListComponent implements OnInit {
 
-  cards = <DataCard[]>[];
+  cards: DataCard[] = [];
 
   constructor( private cardService: DataCardsService) { }
 
@@ -19,8 +19,7 @@ export class DataCardsListComponent implements OnInit {
   }
 
   getCards(): void {
-    this.cardService.getCards()
-    .subscribe(cards => this.cards = cards);
+    this.cards = this.cardService.getCards();
   }
 
   add(card: DataCard): void {
@@ -28,15 +27,12 @@ export class DataCardsListComponent implements OnInit {
     if (!card.name) {
       return;
     }
-    this.cardService.addCard(card)
-      .subscribe( newCard => {
-        this.cards.push(newCard);
-      });
+    this.cards.push(this.cardService.addCard(card));
   }
 
   delete(card: DataCard): void {
     this.cards = this.cards.filter( c => c !== card);
-    this.cardService.deleteCard(card).subscribe();
+    this.cardService.deleteCard(card);
   }
 
 }

@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
 
 import { MetadataCard } from '../models/metadata-card';
+import { GenericCard } from '../models/generic-card';
 import { MessageService } from '../services/message.service';
+import { DatabaseService } from '../services/database.service';
 
 
 @Injectable({
@@ -13,119 +11,92 @@ import { MessageService } from '../services/message.service';
 })
 export class MetadataCardsService {
 
-  private dataUrl = 'api/metadataCards';
-
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
-
   constructor(
-    private http: HttpClient,
+    private dbService: DatabaseService,
     private messageService: MessageService
   ) { }
 
   /* GET cards from server */
-  getCards(): Observable<MetadataCard[]> {
-    return this.http.get<MetadataCard[]>(this.dataUrl)
-    .pipe(
-      tap(_ => this.log('fetched cards')),
-      catchError(this.handleError<MetadataCard[]>('getCards', []))
-    );
+  getCards(): MetadataCard[] {
+    let cardStack: MetadataCard[];
+ 
+    this.dbService.getCardsByType('_metadata')
+    .subscribe( cards => {
+      for(let card of cards) {
+        cardStack.push(this.copyCard(card));
+      }
+    });
 
+    return cardStack;
   }
 
-  /** GET dataCard by id. Return `undefined` when id not found */
-  getCardNo404<Data>(id: string): Observable<MetadataCard> {
-    const url = `${this.dataUrl}/?id=${id}`;
-    return this.http.get<MetadataCard[]>(url)
-      .pipe(
-        map(cards => cards[0]), // returns a {0|1} element array
-        tap(h => {
-          const outcome = h ? `fetched` : `did not find`;
-          this.log(`${outcome} card id=${id}`);
-        }),
-        catchError(this.handleError<MetadataCard>(`getCard id=${id}`))
-      );
+  /** GET card by id. Will 404 if id not found */
+  getCard(id: string): MetadataCard {
+    let dataCard: MetadataCard;
+
+    this.dbService.getCard(id)
+    .subscribe( card => dataCard = this.copyCard(card));
+
+    return dataCard;
   }
 
-  /** GET dataCard by id. Will 404 if id not found */
-  getCard(id: string): Observable<MetadataCard> {
-    const url = `${this.dataUrl}/${id}`;
-    return this.http.get<MetadataCard>(url).pipe(
-      tap(_ => { 
-        this.log(`fetched card id=${id}`); 
-        this.log(`type: ${_.type}`);
-        this.log(`type: ${_.category}`);
-        this.log(`name: ${_.name}`);
-        for( let p in _.values) {
-          this.log(`${p}: ${_[p]}`);
+  /* GET card whose name contains search term */
+  searchCards(term: string): MetadataCard[] {
+    let cardStack: MetadataCard[];
+ 
+    this.dbService.searchByName(term)
+      .subscribe( cards => {
+        for(let card of cards) {
+          cardStack.push(this.copyCard(card));
         }
-      }),
-      catchError(this.handleError<MetadataCard>(`getCard id=${id}`))
-    );
-  }
+      });
 
-  /* GET dataCard whose name contains search term */
-  searchCards(term: string): Observable<MetadataCard[]> {
-    if (!term.trim()) {
-      // if not search term, return empty hero array.
-      return of([]);
-    }
-    return this.http.get<MetadataCard[]>(`${this.dataUrl}/?name=${term}`).pipe(
-      tap(x => x.length ?
-         this.log(`found card matching "${term}"`) :
-         this.log(`no card matching "${term}"`)),
-      catchError(this.handleError<MetadataCard[]>('searchCards', []))
-    );
+    return cardStack;
   }
 
   //////// Save methods //////////
 
   /** POST: add a new hero to the server */
-  addCard(card: MetadataCard): Observable<MetadataCard> {
-    return this.http.post<MetadataCard>(this.dataUrl, card, this.httpOptions).pipe(
-      tap((newCard: MetadataCard) => this.log(`added card w/ id=${newCard.id}`)),
-      catchError(this.handleError<MetadataCard>('addCard'))
-    );
+  addCard(card: MetadataCard): MetadataCard {
+    let newCard: MetadataCard;
+    
+    this.dbService.addCard(card)
+      .subscribe( card => {
+        newCard = this.copyCard(card);
+      });
+
+    return newCard;
   }
 
   /** DELETE: delete the hero from the server */
-  deleteCard(card: MetadataCard | string): Observable<MetadataCard> {
-    const id = typeof card === 'string' ? card : card.id;
-    const url = `${this.dataUrl}/${id}`;
+  deleteCard(card: MetadataCard | string) {
 
-    return this.http.delete<MetadataCard>(url, this.httpOptions).pipe(
-      tap(_ => this.log(`deleted card id=${id}`)),
-      catchError(this.handleError<MetadataCard>('deleteCard'))
-    );
+    this.dbService.deleteCard(card)
+      .subscribe( card => {
+        //
+      });
   }
 
   /** PUT: update the hero on the server */
-  updateCard(card: MetadataCard): Observable<any> {
-    return this.http.put(this.dataUrl, card, this.httpOptions).pipe(
-      tap(_ => this.log(`updated card id=${card.id}`)),
-      catchError(this.handleError<any>('updateCard'))
-    );
+  updateCard(card: MetadataCard): MetadataCard {
+    let newCard: MetadataCard;
+    
+    this.dbService.updateCard(card)
+      .subscribe( card => {
+        newCard = this.copyCard(card);
+      });
+
+    return newCard;
   }
 
-  /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+  private copyCard(source: GenericCard): MetadataCard {
+    let destCard: MetadataCard;
+    destCard.id = source.id;
+    destCard.rev = source.rev;
+    destCard.type = source.type
+    destCard.name = source.name;
+    destCard["values"] = source["values"];
+    return destCard;
   }
 
   private log(message: string) {

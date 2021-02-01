@@ -25,8 +25,7 @@ export class TemplateCardDetailsComponent implements OnInit {
 
   getCard(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.cardService.getCard(id)
-      .subscribe(card => this.card = card);
+    this.cardService.getCard(id);
   }
 
   goBack(): void {
@@ -34,7 +33,6 @@ export class TemplateCardDetailsComponent implements OnInit {
   }
 
   save(): void {
-    this.cardService.updateCard(this.card)
-      .subscribe(() => this.goBack());
+    this.card = this.cardService.updateCard(this.card);
   }
 }

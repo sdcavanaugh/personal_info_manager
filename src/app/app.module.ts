@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -26,6 +27,7 @@ import { TemplateCardsListComponent } from './components/template-cards-list/tem
 import { MessagesComponent } from './components/messages/messages.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DataCardSearchComponent } from './components/data-card-search/data-card-search.component';
+import { SecurityQuestionComponent } from './components/security-question/security-question.component';
 
 
 @NgModule({
@@ -45,10 +47,12 @@ import { DataCardSearchComponent } from './components/data-card-search/data-card
     TemplateCardsListComponent,
     MessagesComponent,
     DashboardComponent,
-    DataCardSearchComponent
+    DataCardSearchComponent,
+    SecurityQuestionComponent
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
     AppRoutingModule,

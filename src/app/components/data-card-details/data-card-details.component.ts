@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { FormControl } from '@angular/forms';
 
 import { DataCard } from '../../models/data-card';
 import { DataCardsService } from '../../services/data-cards.service';
+
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-data-card-details',
@@ -12,21 +15,28 @@ import { DataCardsService } from '../../services/data-cards.service';
 })
 export class DataCardDetailsComponent implements OnInit {
   card: DataCard;
+  controls : {};
+  properties : string[];
 
   constructor(
     private route: ActivatedRoute,
     private cardService: DataCardsService,
+    private messageService: MessageService,
     private location: Location
   ) { }
 
   ngOnInit(): void {
     this.getCard();
+    // for( let p in this.card) {
+    //   this.properties.push(p);
+    //   this.controls[p] = new FormControl('');
+    //   this.messageService.add(`read property ${p}`);
+    // }
   }
 
   getCard(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.cardService.getCard(id)
-      .subscribe(card => this.card = card);
+    this.card = this.cardService.getCard(id);
   }
 
   goBack(): void {
@@ -34,20 +44,24 @@ export class DataCardDetailsComponent implements OnInit {
   }
 
   save(): void {
-    this.cardService.updateCard(this.card)
-      .subscribe(() => this.goBack());
+    this.card = this.cardService.updateCard(this.card);
   }
 
   getPropNames(): string[] {
-    let propNames = [];
-
+    let properties = [];
     for( let p in this.card) {
-      propNames.push(p);
-    }
-
-    return propNames;
+      properties.push(p);
+      // this.properties.push(p);
+      // this.controls[p] = new FormControl('');
+      this.messageService.add(`read property ${p}`);
+  }
+     return properties;
   }
 
+  getControls(): any {
+    return this.controls;
+  }
+  
   getNestedProps(prop): Object[] {
     if (this.isArray(prop)) {
       return this.card[prop];

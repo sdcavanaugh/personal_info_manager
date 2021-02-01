@@ -43,30 +43,11 @@ Each data card contains contact information (properties) for a single entity tha
       - Delete Template Card (`/template/delete/:id ==> template-cards.service.delete(:id)`)
     - Add Template Card (`/template/add ==> add-template-card component`)
 
-## Data Cards
-
-A data card must contain the following properties:
-
-- "type": "data",
-  - "category": "_data category_", 
-  - "name": "_card-name_"
-
-A data card may contain additional properties such as:
-- issuer
-- URL
-- userid
-- password
-- email
-- security phone
-- account number
-- security code
-- security questions
-- expiration
-- security image
+## Data Models
 
 ### Security Questions 
 
-The security questions property (when used) is always a list of question/answer pairs.
+The security-questions property (when used) is always a list of question/answer pairs.
 - "security questions": [
   -  {
       "question": "_security question_",
@@ -74,11 +55,19 @@ The security questions property (when used) is always a list of question/answer 
      }
 ]
 
-## Metadata Cards
+### Generic Card
+A generic-card containsthe following properties:
 
-A metadata card is used to store system structure and design information.
+  - "id": "_unique identifier_",
+  - "rev": "_revision number_",
+  - "type": "_card type_",
+  - "name": "_unique name_",
 
-- "type": "metadata"
+### Metadata Cards
+
+A metadata-card extends generic-card, has {"type": "metadata"} and adds {"values": Array<string>}.  The values array contents are the names is used to store system structure and design information.  For example, the "data categories" metadata-card:
+
+  - "type": "metadata"
   - "name": "data categories"
   - "values": [ 
       "bank",
@@ -89,11 +78,27 @@ A metadata card is used to store system structure and design information.
       "tool"
     ]
 
+### Data Card
+
+A data-card extends generic-card, has {"type": "data"} and adds {"category": string} and {"security questions": SecurityQuestion[]} properties. The value assigned to data-card["category"] should be a value from the metadata["data categories"] card. A data-card may contain additional properties such as:
+
+  - "issuer"
+  - "URL"
+  - "userid"
+  - "password"
+  - "email"
+  - "security phone"
+  - "account number"
+  - "security code"
+  - "security questions"
+  - "expiration"
+  - "security image"
+
 ## Template Cards
 
-Each data card category has a corresponding template card containing suggested data card properties.  A new data card starts with all of the template properties for the selected category.  You may remove unused propertes from a particular data card and add new properties to the data card as needed.  Adding/removing properties from a data card does not change the category template.
+A template-card extends generic-card, has {"type": "template"} and adds {"properties": Arrah<string>}.  Each data-card category has a corresponding template-card containing suggested data card properties.  A new data card starts with all of the template properties for the selected category.  The user may remove unneeded propertes from a particular data card and add new properties to the data card as needed.  Adding/removing properties from a data card does not change the category template.  See the following template-card examples:
 
-- "type": "template",
+  - "type": "template",
   - "name": "bank",
   - "properties": [
       "name",
@@ -108,7 +113,7 @@ Each data card category has a corresponding template card containing suggested d
       "routing number"
     ]
 
-- "type": "template",
+  - "type": "template",
   - "name": "credit card",
   - "properties": [
       "name",
@@ -126,7 +131,7 @@ Each data card category has a corresponding template card containing suggested d
       "security image"
     ]
 
-- "type": "template",
+  - "type": "template",
   - "name": "service",
   - properties: [
       "name",
@@ -138,7 +143,7 @@ Each data card category has a corresponding template card containing suggested d
       "security questions"
   ]
 
-- "type": "template",
+  - "type": "template",
   - "name": "medical",
   - "properties": [
       "name",
@@ -151,7 +156,7 @@ Each data card category has a corresponding template card containing suggested d
       "security questions"
   ]
 
-- "type": "template",
+  - "type": "template",
   - "name": "retirement"
   - "properties": [
       "name",
@@ -168,7 +173,7 @@ Each data card category has a corresponding template card containing suggested d
       "security image"
   ]
 
-- "type": "template",
+  - "type": "template",
   - "name": "tool",
   - "properties": [
       "name",
@@ -183,6 +188,10 @@ Each data card category has a corresponding template card containing suggested d
 ## Data Storage
 
 Each card (data, metadata, template) is saved as a document in the "financial" database.
+
+## Data Retrieval Service
+
+The database service provides generic-card read/write access to the financial database. Card-type specific services extend database service.
 
 ## Database End Points
 

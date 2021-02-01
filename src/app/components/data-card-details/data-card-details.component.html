@@ -2,20 +2,17 @@
     <h2>{{card.name}} Details</h2>
     <div><span>id: </span>{{card.id}}</div>
     <div *ngFor="let prop of getPropNames()">
-      <div *ngIf="this.isArray(prop); then thenBlock else elseBlock"></div>
+      <div *ngIf="this.prop === 'security questions'; then thenBlock else elseBlock"></div>
       <ng-template #thenBlock>
-        {{prop}} ==> {{card[prop]}}
-<!--
-        <dif *ngFor="let p of getNestedProps(prop)">
-          <label>{{p}}: 
-            <input [(ngModel)]="card[prop][p]" placeholder="{{p}}"/>
-          </label>
-        </dif>
--->
+        <app-security-question *ngFor="let question of card[prop]" [securityQuestion]="question">
+        </app-security-question>
       </ng-template>
       <ng-template #elseBlock>
         <label>{{prop}}: 
-          <input [(ngModel)]="card[prop]" placeholder="{{prop}}"/>
+<!--
+          <input [(ngModel)]="card[prop]" placeholder="{{prop}}">
+          <input type="text" [formControl]="controls[prop]">
+-->
         </label>
       </ng-template>
     </div>

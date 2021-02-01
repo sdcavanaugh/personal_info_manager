@@ -3,11 +3,6 @@ import { InMemoryDbService } from 'angular-in-memory-web-api';
 
 import { UUID } from 'angular2-uuid';
 
-// import { DataCard } from '../models/data-card';
-// import { MetadataCard } from '../models/metadata-card';
-// import { TemplateCard } from '../models/template-card';
-
-
 @Injectable({
   providedIn: 'root',
 })
@@ -15,11 +10,11 @@ export class InMemoryDataService implements InMemoryDbService {
   uuidValue: string;
 
   createDb() {
-    const dataCards: Object[] = [
+    const cards: Object[] = [
       {
         "id": "1",
         "rev": "1",
-        "type": "data",
+        "type": "_data",
         "category": "credit card",
         "name": "Royal Carribean",
         "issuer name": "bank of america",
@@ -38,7 +33,7 @@ export class InMemoryDataService implements InMemoryDbService {
       {
         "id": "2",
         "rev": "1",
-        "type": "data",
+        "type": "_data",
         "category": "credit card",
         "name": "BJs - Steve",
         "issuer name": "synchrony",
@@ -49,14 +44,11 @@ export class InMemoryDataService implements InMemoryDbService {
               "answer": "Patricia"
           },
         ]
-      }
-    ];
-
-    const metadataCards: Object[] = [
+      },
       {
-        "id": "1",
+        "id": "3",
         "rev": "1",
-        "type": "data ",
+        "type": "_data",
         "name": "data categories",
         "values": [
           "bank",
@@ -66,14 +58,11 @@ export class InMemoryDataService implements InMemoryDbService {
           "retirement",
           "tool"
         ]
-      }
-    ];
-
-    const templateCards: Object[] = [
+      },
       {
-        "id": "1",
+        "id": "4",
         "rev": "1",
-        "type": "template",
+        "type": "_template",
         "name": "bank",
         "properties": [
           "name",
@@ -89,9 +78,9 @@ export class InMemoryDataService implements InMemoryDbService {
         ]
       },
       {
-        "id": "2",
+        "id": "5",
         "rev": "1",
-        "type": "template",
+        "type": "_template",
         "name": "credit card",
         "properties": [
           "name",
@@ -108,11 +97,24 @@ export class InMemoryDataService implements InMemoryDbService {
           "security questions",
           "security image"
         ]
+      },
+      {
+        "id": "6",
+        "ref": "1",
+        "type": "_metadata",
+        "name": "data categories",
+        "values": [ 
+            "bank",
+            "credit card",
+            "service",
+            "medical",
+            "retirement",
+            "tool"
+          ]
       }
     ];
-    // const dataStores = { dataCards, metadataCards, templateCards };
-    // return dataStores;
-    return {dataCards, metadataCards, templateCards};
+
+    return {cards};
   }
 
   // Overrides the genId method to ensure that a record always has an id.

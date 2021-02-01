@@ -1,151 +1,134 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
 
 import { DataCard } from '../models/data-card';
-import { SecurityQuestion } from '../models/security-question';
-
+import { GenericCard } from '../models/generic-card';
 import { MessageService } from '../services/message.service';
+import { DatabaseService } from '../services/database.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataCardsService {
 
-  private dataUrl = 'api/dataCards';
-
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
-
   constructor(
-    private http: HttpClient,
+    private dbService: DatabaseService,
     private messageService: MessageService
   ) { }
 
   /* GET cards from server */
-  getCards(): Observable<DataCard[]> {
-    return this.http.get<DataCard[]>(this.dataUrl)
-    .pipe(
-      tap(_ => this.log('fetched cards')),
-      catchError(this.handleError<DataCard[]>('getCards', []))
-    );
-
-  }
-
-  /** GET dataCard by id. Return `undefined` when id not found */
-  getCardNo404<Data>(id: string): Observable<DataCard> {
-    const url = `${this.dataUrl}/?id=${id}`;
-    return this.http.get<DataCard[]>(url)
-      .pipe(
-        map(cards => cards[0]), // returns a {0|1} element array
-        tap(h => {
-          const outcome = h ? `fetched` : `did not find`;
-          this.log(`${outcome} card id=${id}`);
-        }),
-        catchError(this.handleError<DataCard>(`getCard id=${id}`))
-      );
+  getCards(): DataCard[] {
+    let cardStack: DataCard[];
+ 
+    this.dbService.getCardsByType('_data')
+    .subscribe( cards => {
+      for(let card of cards) {
+        let dataCard:DataCard = card as DataCard;
+        for( let prop in dataCard) {
+          this.log(`${prop} = ${card[prop]}`);
+        }
+        cardStack.push(dataCard);
+      }
+    });
+    this.log(`found ${cardStack.length} _data cards`);
+    return cardStack;
   }
 
   /** GET dataCard by id. Will 404 if id not found */
-  getCard(id: string): Observable<DataCard> {
-    const url = `${this.dataUrl}/${id}`;
-    return this.http.get<DataCard>(url).pipe(
-      tap(_ => { 
-        this.log(`fetched card id=${id}`); 
-        this.log(`type: ${_.type}`);
-        this.log(`type: ${_.category}`);
-        this.log(`name: ${_.name}`);
-        this.log(`properties:`);
-        // =====
-        // TODO - look at moving this logic into data-card-details.component.getNestedProps()
-        // =====
-        for( let p in _) {
-          if ( _[p] instanceof Array ) {
-            this.log(`${p}`);
-            for( let a in _[p] ) {
-              if ( _[p][a] instanceof Object ) {
-                for ( let n in _[p][a] ) {
-                  this.log(`${n}: ${_[p][a][n]}`)
-                }
-              } else {
-                this.log(`${a}: ${_[p][a]}`)
-              }
-            }
-          } else {
-            this.log(`${p}: ${_[p]}`);
-          }
-        }
-      }),
-      catchError(this.handleError<DataCard>(`getCard id=${id}`))
-    );
+  getCard(id: string): DataCard {
+    let dataCard: DataCard;
+
+    this.dbService.getCard(id)
+    .subscribe( card => dataCard = this.copyCard(card));
+
+    return dataCard;
+        // this.log(`fetched card id=${id}`); 
+        // this.log(`type: ${_.type}`);
+        // this.log(`type: ${_.category}`);
+        // this.log(`name: ${_.name}`);
+        // this.log(`properties:`);
+        // // =====
+        // // TODO - look at moving this logic into data-card-details.component.getNestedProps()
+        // // =====
+        // for( let p in _) {
+        //   if ( _[p] instanceof Array ) {
+        //     this.log(`${p}`);
+        //     for( let a in _[p] ) {
+        //       if ( _[p][a] instanceof Object ) {
+        //         for ( let n in _[p][a] ) {
+        //           this.log(`${n}: ${_[p][a][n]}`)
+        //         }
+        //       } else {
+        //         this.log(`${a}: ${_[p][a]}`)
+        //       }
+        //     }
+        //   } else {
+        //     this.log(`${p}: ${_[p]}`);
+        //   }
+        // }
   }
 
+
   /* GET dataCard whose name contains search term */
-  searchCards(term: string): Observable<DataCard[]> {
-    if (!term.trim()) {
-      // if not search term, return empty hero array.
-      return of([]);
-    }
-    return this.http.get<DataCard[]>(`${this.dataUrl}/?name=${term}`).pipe(
-      tap(x => x.length ?
-         this.log(`found card matching "${term}"`) :
-         this.log(`no card matching "${term}"`)),
-      catchError(this.handleError<DataCard[]>('searchCards', []))
-    );
+  searchCards(term: string): DataCard[] {
+    let cardStack: DataCard[];
+ 
+    this.dbService.searchByName(term)
+      .subscribe( cards => {
+        for(let card of cards) {
+          cardStack.push(this.copyCard(card));
+        }
+      });
+
+    return cardStack;
   }
 
   //////// Save methods //////////
 
   /** POST: add a new hero to the server */
-  addCard(card: DataCard): Observable<DataCard> {
-    return this.http.post<DataCard>(this.dataUrl, card, this.httpOptions).pipe(
-      tap((newCard: DataCard) => this.log(`added card w/ id=${newCard.id}`)),
-      catchError(this.handleError<DataCard>('addCard'))
-    );
+  addCard(card: DataCard): DataCard {
+    let newCard: DataCard;
+    
+    this.dbService.addCard(card)
+      .subscribe( card => {
+        newCard = this.copyCard(card);
+      });
+
+    return newCard;
   }
 
   /** DELETE: delete the hero from the server */
-  deleteCard(card: DataCard | string): Observable<DataCard> {
-    const id = typeof card === 'string' ? card : card.id;
-    const url = `${this.dataUrl}/${id}`;
+  deleteCard(card: DataCard | string) {
 
-    return this.http.delete<DataCard>(url, this.httpOptions).pipe(
-      tap(_ => this.log(`deleted card id=${id}`)),
-      catchError(this.handleError<DataCard>('deleteCard'))
-    );
+    this.dbService.deleteCard(card)
+      .subscribe( card => {
+        //
+      });
   }
 
   /** PUT: update the hero on the server */
-  updateCard(card: DataCard): Observable<any> {
-    return this.http.put(this.dataUrl, card, this.httpOptions).pipe(
-      tap(_ => this.log(`updated card id=${card.id}`)),
-      catchError(this.handleError<any>('updateCard'))
-    );
+  updateCard(card: DataCard): DataCard {
+    let newCard: DataCard;
+    
+    this.dbService.updateCard(card)
+      .subscribe( card => {
+        newCard = this.copyCard(card);
+      });
+
+    return newCard;
   }
 
-  /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+  private copyCard(source: GenericCard): DataCard {
+    let destCard = {} as DataCard;
+    destCard.id = source.id;
+    destCard.rev = source.rev;
+    destCard.type = source.type
+    destCard.name = source.name;
+    destCard.category = source["category"];
+    destCard["security questions"] = source["security questions"];
+    return destCard;
   }
 
+  
   private log(message: string) {
     this.messageService.add(`DataCardsService: ${message}`);
   }

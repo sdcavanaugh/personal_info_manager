@@ -16,17 +16,5 @@
             <span class="badge">{{card.id}}</span> {{card.name}}
         </a>
         <button class="delete" title="delete card" (click)="delete(card)">x</button>
-    <!--
-        <br>
-        <span>{{card.id}}</span>
-        {{card.type}}<br>
-        {{card.category}}<br>
-        {{card.name}}<br>
-        <ul>
-            <li *ngFor="let prop of card.allProps | keyvalue">
-                {{prop.key}} ==> {{prop.value}}
-            </li>
-        </ul>
-    -->
     </li>
 </ul>

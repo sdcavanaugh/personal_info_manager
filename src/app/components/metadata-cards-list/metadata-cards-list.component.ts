@@ -19,8 +19,7 @@ export class MetadataCardsListComponent implements OnInit {
   }
 
   getCards(): void {
-    this.cardService.getCards()
-    .subscribe(cards => this.cards = cards);
+    this.cards = this.cardService.getCards();
   }
 
   add(card: MetadataCard): void {
@@ -28,15 +27,12 @@ export class MetadataCardsListComponent implements OnInit {
     if (!card.name) {
       return;
     }
-    this.cardService.addCard(card)
-      .subscribe( newCard => {
-        this.cards.push(newCard);
-      });
+    this.cards.push(this.cardService.addCard(card));
   }
 
   delete(card: MetadataCard): void {
     this.cards = this.cards.filter( c => c !== card);
-    this.cardService.deleteCard(card).subscribe();
+    this.cardService.deleteCard(card);
   }
 
 }
