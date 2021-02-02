@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { TemplateCard } from '../../models/template-card';
-import { TemplateCardsService } from '../../services/template-cards.service';
+import { DatabaseService } from '../../services/database.service';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-template-cards-list',
@@ -12,14 +13,16 @@ export class TemplateCardsListComponent implements OnInit {
 
   cards = <TemplateCard[]>[];
   
-  constructor( private cardService: TemplateCardsService) { }
+  constructor( 
+    private dbService: DatabaseService,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
-    this.getCards();
-  }
-
-  getCards(): void {
-    this.cardService.getCards();
+    this.dbService.getCardsByType('_template')
+    .subscribe( (cards: any[]) => {
+      this.cards = cards;
+    });
   }
 
   add(card: TemplateCard): void {
@@ -27,12 +30,20 @@ export class TemplateCardsListComponent implements OnInit {
     if (!card.name) {
       return;
     }
-    this.cards.push(this.cardService.addCard(card));
+    this.dbService.addCard(card)
+      .subscribe( 
+        response => {
+          this.log(response);
+        }
+      );
   }
 
   delete(card: TemplateCard): void {
     this.cards = this.cards.filter( c => c !== card);
-    this.cardService.deleteCard(card);
+    this.dbService.deleteCard(card);
   }
 
+  private log(message: string) {
+    this.messageService.add(`template-cards-list: ${message}`);
+  }
 }

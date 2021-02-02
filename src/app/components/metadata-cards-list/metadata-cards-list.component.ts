@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { MetadataCard } from '../../models/metadata-card';
-import { MetadataCardsService } from '../../services/metadata-cards.service';
+import { DatabaseService } from '../../services/database.service';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-metadata-cards-list',
@@ -10,16 +11,18 @@ import { MetadataCardsService } from '../../services/metadata-cards.service';
 })
 export class MetadataCardsListComponent implements OnInit {
 
-  cards = <MetadataCard[]>[];
+  cards: MetadataCard[] = [];
 
-  constructor( private cardService: MetadataCardsService) { }
+  constructor(
+    private dbService: DatabaseService,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
-    this.getCards();
-  }
-
-  getCards(): void {
-    this.cards = this.cardService.getCards();
+    this.dbService.getCardsByType('_metadata')
+    .subscribe( (cards: any[]) => {
+      this.cards = cards;
+    });
   }
 
   add(card: MetadataCard): void {
@@ -27,12 +30,20 @@ export class MetadataCardsListComponent implements OnInit {
     if (!card.name) {
       return;
     }
-    this.cards.push(this.cardService.addCard(card));
+    this.dbService.addCard(card)
+      .subscribe( 
+        response => {
+          this.log(response);
+        }
+      );
   }
 
   delete(card: MetadataCard): void {
     this.cards = this.cards.filter( c => c !== card);
-    this.cardService.deleteCard(card);
+    this.dbService.deleteCard(card);
   }
 
+  private log(message: string) {
+    this.messageService.add(`metadata-cards-list: ${message}`);
+  }
 }

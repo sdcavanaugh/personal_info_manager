@@ -1,23 +1,27 @@
 <div *ngIf="card">
-    <h2>{{card.name}} Details</h2>
-    <div><span>id: </span>{{card.id}}</div>
-    <div *ngFor="let prop of getPropNames()">
-      <div *ngIf="this.prop === 'security questions'; then thenBlock else elseBlock"></div>
-      <ng-template #thenBlock>
-        <app-security-question *ngFor="let question of card[prop]" [securityQuestion]="question">
-        </app-security-question>
-      </ng-template>
-      <ng-template #elseBlock>
-        <label>{{prop}}: 
-<!--
-          <input [(ngModel)]="card[prop]" placeholder="{{prop}}">
-          <input type="text" [formControl]="controls[prop]">
--->
-        </label>
-      </ng-template>
-    </div>
+  <h2>{{card.name}} Details</h2>
+  <p>Fixed properties:</p>
   <div>
+    <span>id: </span>{{card.id}}<br/>
+    <span>rev: </span><span>{{card.rev}}</span>
   </div>
-    <button (click)="goBack()">go back</button>
+
+  <div *ngFor="let prop of getPropNames()">
+    <div *ngIf="prop === 'security questions'; then thenBlock else elseBlock"></div>
+    <ng-template #thenBlock>
+      <app-security-question *ngFor="let question of card[prop]" [securityQuestion]="question">
+      </app-security-question>
+    </ng-template>
+    <ng-template #elseBlock>
+      <label>{{prop}}: 
+        <input [(ngModel)]="card[prop]" placeholder="{{prop}}">
+        <input type="text" [formControl]="controls[prop]">
+      </label>
+    </ng-template>
+  </div> 
+
+  <div>
     <button (click)="save()">save</button>
+    <button (click)="goBack()">go back</button>
   </div>
+</div>

@@ -19,19 +19,19 @@ export class DashboardComponent implements OnInit {
   templateCards: TemplateCard[] = [];
 
   constructor(
-    private dataCardService: DataCardsService,
+    // private dataCardService: DataCardsService,
     // private metadataCardService: MetadataCardsService,
     // private templateCardService: TemplateCardsService
   ) { }
 
   ngOnInit(): void {
-    this.getDataCards();
+    // this.getDataCards();
     // this.getMetadataCards();
     // this.getTemplateCards();
   }
 
   getDataCards(): void {
-    this.dataCardService.getCards();
+    // this.dataCardService.getCards();
   }
 
   // getMetadataCards(): void {

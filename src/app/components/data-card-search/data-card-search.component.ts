@@ -6,7 +6,7 @@ import {
 } from 'rxjs/operators';
 
 import { DataCard } from '../../models/data-card';
-import { DataCardsService } from '../../services/data-cards.service';
+import { DatabaseService } from '../../services/database.service';
 
 @Component({
   selector: 'app-data-card-search',
@@ -14,10 +14,10 @@ import { DataCardsService } from '../../services/data-cards.service';
   styleUrls: ['./data-card-search.component.css']
 })
 export class DataCardSearchComponent implements OnInit {
-  cards$: DataCard[];
+  cards$: Observable<any[]>;
   private searchTerms = new Subject<string>();
 
-  constructor(private service: DataCardsService) { }
+  constructor(private service: DatabaseService) { }
 
   // Push a search term into the observable stream.
   search(term: string): void {
@@ -33,7 +33,7 @@ export class DataCardSearchComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.service.searchCards(term)),
+      switchMap((term: string) => this.service.searchByName(term)),
     );
   }
 }

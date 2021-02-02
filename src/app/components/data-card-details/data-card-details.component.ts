@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { FormControl } from '@angular/forms';
 
 import { DataCard } from '../../models/data-card';
-import { DataCardsService } from '../../services/data-cards.service';
+import { DatabaseService } from '../../services/database.service';
 
 import { MessageService } from '../../services/message.service';
 
@@ -15,28 +15,27 @@ import { MessageService } from '../../services/message.service';
 })
 export class DataCardDetailsComponent implements OnInit {
   card: DataCard;
-  controls : {};
-  properties : string[];
+  controls: {};
+  properties: string[];
 
   constructor(
     private route: ActivatedRoute,
-    private cardService: DataCardsService,
+    private dbService: DatabaseService,
     private messageService: MessageService,
     private location: Location
   ) { }
 
   ngOnInit(): void {
-    this.getCard();
-    // for( let p in this.card) {
-    //   this.properties.push(p);
-    //   this.controls[p] = new FormControl('');
-    //   this.messageService.add(`read property ${p}`);
-    // }
-  }
-
-  getCard(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.card = this.cardService.getCard(id);
+    this.dbService.getCard(id)
+      .subscribe( (card: any) => {
+        this.card = card;
+        // for( let p in this.card) {
+        //   this.properties.push(p);
+        //   this.controls[p] = new FormControl('');
+        //   this.messageService.add(`read property ${p}`);
+        // }
+     });
   }
 
   goBack(): void {
@@ -44,18 +43,20 @@ export class DataCardDetailsComponent implements OnInit {
   }
 
   save(): void {
-    this.card = this.cardService.updateCard(this.card);
+    this.dbService.updateCard(this.card);
   }
 
   getPropNames(): string[] {
+    this.messageService.add("getPropNames()...");
     let properties = [];
     for( let p in this.card) {
       properties.push(p);
       // this.properties.push(p);
       // this.controls[p] = new FormControl('');
       this.messageService.add(`read property ${p}`);
-  }
-     return properties;
+    }
+    return properties;
+    // return this.properties;
   }
 
   getControls(): any {
